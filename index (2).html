@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IILM Greater Noida — Faculty Directory</title>
+<meta name="description" content="Find faculty contact details and cabin locations at IILM Greater Noida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEEE5;
+    --paper-card:#F8F8F3;
+    --ink:#161E15;
+    --ink-soft:#4B5546;
+    --forest:#2C4A38;
+    --forest-deep:#1D3327;
+    --gold:#A9791F;
+    --gold-soft:#F1E4C3;
+    --rule:#D7D7C8;
+    --white:#FFFFFF;
+    --radius-s:6px;
+    --radius-m:12px;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100%;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--gold-soft);color:var(--ink);}
+
+  .serif{font-family:'Newsreader',Georgia,serif;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:var(--forest-deep);
+    color:var(--paper);
+    padding:56px 24px 40px;
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead::after{
+    content:"";
+    position:absolute;
+    right:-60px; top:-80px;
+    width:280px;height:280px;
+    border:1px solid rgba(237,238,229,0.14);
+    border-radius:50%;
+  }
+  .masthead::before{
+    content:"";
+    position:absolute;
+    right:20px; bottom:-120px;
+    width:200px;height:200px;
+    border:1px solid rgba(237,238,229,0.10);
+    border-radius:50%;
+  }
+  .masthead-inner{
+    max-width:1180px;margin:0 auto;position:relative;z-index:1;
+  }
+  .masthead-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--gold-soft);
+    opacity:0.85;
+    margin:0 0 14px;
+  }
+  .masthead h1{
+    font-family:'Newsreader',Georgia,serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:clamp(34px,5vw,54px);
+    line-height:1.08;
+    margin:0 0 14px;
+    max-width:820px;
+    letter-spacing:-0.01em;
+  }
+  .masthead p{
+    font-size:16px;
+    line-height:1.6;
+    color:rgba(237,238,229,0.78);
+    max-width:520px;
+    margin:0 0 32px;
+  }
+
+  /* ---------- Search / controls ---------- */
+  .controls{
+    max-width:1180px;margin:0 auto;
+    padding:0 24px;
+    transform:translateY(-28px);
+  }
+  .search-card{
+    background:var(--white);
+    border-radius:var(--radius-m);
+    box-shadow:0 14px 30px -12px rgba(22,30,21,0.28);
+    padding:18px 20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+  }
+  .search-field{
+    flex:1 1 280px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:1.5px solid var(--rule);
+    padding-bottom:9px;
+  }
+  .search-field svg{flex:none;color:var(--ink-soft);}
+  .search-field input{
+    border:none;outline:none;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:15.5px;
+    width:100%;
+    background:transparent;
+    color:var(--ink);
+  }
+  .search-field input::placeholder{color:#9AA192;}
+
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1.5px solid var(--rule);
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--forest);}
+  .chip.active{
+    background:var(--forest-deep);
+    border-color:var(--forest-deep);
+    color:var(--paper);
+  }
+
+  /* ---------- Directory ---------- */
+  .directory{
+    max-width:1180px;margin:0 auto;
+    padding:8px 24px 90px;
+  }
+  .result-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin:6px 4px 20px;
+    color:var(--ink-soft);
+    font-size:13.5px;
+  }
+  .result-row span.count{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--forest-deep);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(272px,1fr));
+    gap:22px;
+  }
+
+  .card{
+    background:var(--paper-card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius-m);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{
+    border-color:var(--forest);
+    transform:translateY(-3px);
+    box-shadow:0 16px 32px -16px rgba(22,30,21,0.4);
+  }
+
+  /* Card header: compact photo beside the name */
+  .card-head{
+    display:flex;flex-direction:column;align-items:stretch;gap:0;
+    padding:0;
+    border-bottom:1px solid var(--rule);
+  }
+  .photo-wrap{
+    position:relative;
+    flex:none;
+    width:100%;
+    aspect-ratio:4/5;
+    border-radius:0;
+    background:var(--forest);
+    overflow:hidden;
+  }
+  .photo{
+    width:100%;height:100%;
+    object-fit:cover;object-position:center 8%;
+    display:block;
+  }
+  .photo-fallback{
+    width:100%;height:100%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Newsreader',serif;font-style:italic;font-weight:500;
+    font-size:56px;color:rgba(245,243,233,0.92);
+  }
+  .photo-name{min-width:0;padding:14px 16px 14px;}
+  .photo-name .sal{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:0.03em;
+    color:var(--gold);
+    display:block;margin-bottom:2px;
+  }
+  .photo-name h3{
+    font-family:'Newsreader',serif;
+    font-weight:600;
+    font-size:21px;
+    line-height:1.2;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .card-body{
+    padding:14px 16px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+  }
+
+  .divider{height:1px;background:var(--rule);}
+
+  .row{
+    display:flex;align-items:center;gap:9px;
+    font-size:13.8px;
+  }
+  .row svg{flex:none;color:var(--forest-deep);}
+  .row a{
+    text-decoration:none;
+    color:var(--ink);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    border-bottom:1px solid transparent;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .row a:hover{border-color:var(--forest-deep);color:var(--forest-deep);}
+
+  .location{
+    display:flex;align-items:flex-start;gap:10px;
+    font-size:13.4px;
+    line-height:1.4;
+    padding:10px 11px;
+    border-radius:var(--radius-s);
+  }
+  .location.found{
+    background:var(--gold-soft);
+    color:#4A3A0F;
+    border:1px solid #DCC58A;
+    border-left:4px solid var(--gold);
+    padding:12px 13px;
+    align-items:center;
+  }
+  .location.found svg{width:22px;height:22px;color:var(--gold);margin-top:0;}
+  .location.found .loc-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .location.found .loc-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;font-weight:500;letter-spacing:0.04em;
+    color:var(--gold);
+  }
+  .location.found .loc-value{
+    font-size:15.5px;font-weight:600;line-height:1.3;
+    color:#3B2E08;
+  }
+  .location.missing{
+    background:transparent;
+    border:1px dashed var(--rule);
+    color:var(--ink-soft);
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+  }
+  .location.missing .missing-text{display:flex;gap:9px;align-items:flex-start;}
+  .location svg{flex:none;margin-top:1px;}
+
+  .report-btn{
+    align-self:flex-start;
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:12.5px;font-weight:600;
+    color:var(--forest-deep);
+    background:var(--white);
+    border:1.3px solid var(--forest-deep);
+    padding:7px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    text-decoration:none;
+    transition:background .15s ease, color .15s ease;
+  }
+  .report-btn:hover{background:var(--forest-deep);color:var(--paper);}
+  .report-btn svg{flex:none;}
+
+  .empty-state{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--ink-soft);
+  }
+  .empty-state h3{font-family:'Newsreader',serif;font-style:italic;font-weight:500;font-size:22px;color:var(--ink);margin:0 0 8px;}
+
+  footer{
+    border-top:1px solid var(--rule);
+    padding:30px 24px 44px;
+    max-width:1180px;margin:0 auto;
+    color:var(--ink-soft);
+    font-size:13px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+  footer a{color:var(--forest-deep);font-weight:600;text-decoration:none;border-bottom:1px solid var(--forest-deep);}
+
+  @media (max-width:640px){
+    .masthead{padding:44px 18px 34px;}
+    .controls{padding:0 16px;}
+    .directory{padding:8px 16px 70px;}
+    footer{padding:26px 16px 36px;}
+    .grid{grid-template-columns:1fr;gap:12px;}
+    .card-body{padding:12px 14px 15px;}
+    .photo-wrap{aspect-ratio:1/1;}
+    .photo-name{padding:12px 14px;}
+    .photo-name h3{font-size:19px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="masthead-eyebrow">IILM GREATER NOIDA · CAMPUS DIRECTORY</p>
+    <h1>Find your faculty — where they sit, how to reach them.</h1>
+    <p>Search any professor to get their email and phone in one tap, and their cabin location when it's on record.</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-card">
+    <div class="search-field">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="Search faculty by name…" autocomplete="off">
+    </div>
+    <div class="chip-row" id="chipRow">
+      <button class="chip active" data-filter="all">All faculty</button>
+      <button class="chip" data-filter="located">Cabin located</button>
+    </div>
+  </div>
+</div>
+
+<main class="directory">
+  <div class="result-row">
+    <span id="resultLabel">Showing all faculty</span>
+    <span class="count" id="resultCount">— records</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <h3>No one matches that search</h3>
+    <p>Try a different spelling, or check for a first-name / last-name swap.</p>
+  </div>
+</main>
+
+<footer>
+  <span>IILM Greater Noida Faculty Directory · data maintained by students, for students.</span>
+  <a id="reportIssue" href="mailto:modassir.25scs1003003175@iilm.edu?subject=Faculty%20Directory%20%E2%80%94%20feedback" rel="noopener">Report an issue</a>
+</footer>
+
+<script id="facultyData" type="application/json">[{"n":"Himanshu Sharma","s":"Dr.","e":"Sharma.himanshu@iilm.edu","p":"9999618675","c":"Cabin 7 PG Ground floor","i":"images/sharma.himanshu.jpg"},{"n":"Avadhesh Kumar Gupta","s":"Dr.","e":"avadhesh.gupta@iilm.edu","p":"9711002899","c":"","i":"images/avadhesh.gupta.webp"},{"n":"Amit Agrawal","s":"Dr.","e":"amit.agrawal@iilm.edu","p":"9971488851","c":"","i":"images/amit.agrawal.png"},{"n":"Lalit Kumar","s":"Dr.","e":"lalitkumar@iilm.edu","p":"7417871552","c":"Ground floor cabin no. 4","i":"images/lalitkumar.png"},{"n":"Manali","s":"Dr.","e":"manali@iilm.edu","p":"7289863727","c":"","i":""},{"n":"Vikas Pratap Singh","s":"Dr.","e":"vikaspratap.singh@iilm.edu","p":"9792911144","c":"","i":"images/vikaspratap.singh.webp"},{"n":"Komal Salgotra","s":"Ms.","e":"Komal.salgotra@iilm.edu","p":"6006278277","c":"","i":"images/komal.salgotra.webp"},{"n":"Pranav Shrivastava","s":"Dr.","e":"Pranav.shrivastava@iilm.edu","p":"9582775504","c":"","i":"images/pranav.shrivastava.webp"},{"n":"Sumit Kumar","s":"Dr.","e":"sumit.kumar@iilm.edu","p":"9891502406","c":"","i":"images/sumit.kumar.webp"},{"n":"Gaurav Kumar","s":"Dr.","e":"gauravkumar@iilm.edu","p":"9810188016","c":"","i":"images/gauravkumar.webp"},{"n":"Anik","s":"Mr.","e":"anik.acharjee@iilm.edu","p":"9986544347","c":"","i":""},{"n":"Harun Faridi","s":"Mr.","e":"harun@iilm.edu","p":"9034739666","c":"","i":"images/harun.webp"},{"n":"Narinder Verma","s":"Dr.","e":"narinder.verma@iilm.edu","p":"7889315636","c":"","i":"images/narinder.verma.webp"},{"n":"Pankaj Sharma","s":"Mr.","e":"pankajsharma@iilm.edu","p":"9467865790","c":"","i":"images/pankajsharma.png"},{"n":"PRAKRITI RAO","s":"Ms.","e":"prakriti.rao@iilm.edu","p":"9149042820","c":"","i":"images/prakriti.rao.webp"},{"n":"Vikas Kamra","s":"Dr.","e":"vikas.kamra@iilm.edu","p":"9215511511","c":"","i":""},{"n":"Imran Khan","s":"Mr.","e":"imran.khan@iilm.edu","p":"9760644862","c":"seat 14, EB 303","i":"images/imran.khan.webp"},{"n":"Ashish Sharma","s":"Dr.","e":"sharma.ashish@iilm.edu","p":"6351554521","c":"","i":"images/sharma.ashish.webp"},{"n":"Ritu Devan","s":"Dr.","e":"ritu.dewan@iilm.edu","p":"9873415626","c":"","i":"images/ritu.dewan.webp"},{"n":"Prabu K","s":"Dr.","e":"prabu.k@iilm.edu","p":"9080340376","c":"Director block, 1st floor-31","i":"images/prabu.k.webp"},{"n":"Ajeet Kumar Sharma","s":"Dr.","e":"kumar.ajeet@iilm.edu","p":"9634477686","c":"31 Directors Block","i":"images/kumar.ajeet.webp"},{"n":"Vikas Chauhan","s":"Mr.","e":"vikas.chauhan@iilm.edu","p":"8745013579","c":"","i":"images/vikas.chauhan.webp"},{"n":"Ankit Chauhan","s":"Mr.","e":"ankit.chauhan@iilm.edu","p":"8528135310","c":"","i":"images/ankit.chauhan.jpg"},{"n":"Ajay Prasad","s":"Dr.","e":"ajay.prasad@iilm.edu","p":"9690129280","c":"","i":"images/ajay.prasad.webp"},{"n":"Richa Yadav","s":"Dr.","e":"richa.yadav@iilm.edu","p":"9753621281","c":"","i":"images/richa.yadav.webp"},{"n":"Priyanka Tyagi","s":"Ms.","e":"Priyanka.tyagi@iilm.edu","p":"7417464160","c":"303 Eb, seat 78","i":"images/priyanka.tyagi.webp"},{"n":"Rakesh Pandey","s":"Mr.","e":"rakesh.pandey@iilm.edu","p":"8839917087","c":"","i":"images/rakesh.pandey.webp"},{"n":"Harendra Singh","s":"Dr.","e":"harendra.singh@iilm.edu","p":"7500959656","c":"Director's Block- 22","i":"images/harendra.singh.webp"},{"n":"Saurabh Kumar","s":"Dr.","e":"saurabh.kumar@iilm.edu","p":"8218827767","c":"","i":"images/saurabh.kumar.webp"},{"n":"Sandeep Saxena","s":"Dr.","e":"sandeepsaxena@iilm.edu","p":"9650012723","c":"Director block cabin 2, ground floor","i":"images/sandeepsaxena.webp"},{"n":"Anand Singh","s":"Dr.","e":"anand.s@iilm.edu","p":"9415063290","c":"","i":"images/anand.s.webp"},{"n":"Gagan Gupta","s":"Mr.","e":"gagan.gupta@iilm.edu","p":"9711388255","c":"","i":"images/gagan.gupta.webp"},{"n":"Kiran Kumar","s":"Mr.","e":"kiran.kumar@iilm.edu","p":"9871929873","c":"","i":"images/kiran.kumar.webp"},{"n":"Atul Kumar Singh","s":"Mr.","e":"atul.singh@iilm.edu","p":"9711952626","c":"","i":"images/atul.singh.webp"},{"n":"Ashis Ratha","s":"Mr.","e":"ashis.ratha@iilm.edu","p":"9861216315","c":"first floor director block cabin no.14 left side of stairs","i":"images/ashis.ratha.png"},{"n":"Ramvath Ganesh","s":"Mr.","e":"ramavath.ganesh@iilm.edu","p":"9398304691","c":"","i":"images/ramavath.ganesh.webp"},{"n":"Neha","s":"Ms.","e":"neha.neha@iilm.edu","p":"8053563586","c":"","i":""},{"n":"Aamir Ali","s":"Mr.","e":"aamir.ali@iilm.edu","p":"87555 05535","c":"","i":""},{"n":"Yashwant Soni","s":"Mr.","e":"yashwant.soni@iilm.edu","p":"9602234196","c":"EB 1st floor faculty room","i":"images/yashwant.soni.png"},{"n":"Shahbaz Ahmad","s":"Dr.","e":"shahbaz.ahmad@iilm.edu","p":"7006820824","c":"","i":"images/shahbaz.ahmad.webp"},{"n":"Amrita Joshi","s":"Dr.","e":"amrita.joshi@iilm.edu","p":"9643547670","c":"","i":""},{"n":"Suman Yadav","s":"Dr.","e":"suman.yadav@iilm.edu","p":"9910719256","c":"","i":""},{"n":"Rishabh Srivastava","s":"Mr.","e":"rishabh.srivastava@iilm.edu","p":"7388181628","c":"EB 303 - 52","i":"images/rishabh.srivastava.webp"},{"n":"Shweta Chaudhary","s":"Ms.","e":"shweta.chaudhary@iilm.edu","p":"9899216860","c":"","i":"images/shweta.chaudhary.webp"},{"n":"Papiya Mukherjee","s":"Ms.","e":"papiya.mukherjee@iilm.edu","p":"9831510125","c":"","i":"images/papiya.mukherjee.webp"},{"n":"Shantanu Bindewari","s":"Mr.","e":"shantanu.bindewari@iilm.edu","p":"8871189169","c":"","i":"images/shantanu.bindewari.webp"},{"n":"Lalita Verma","s":"Ms.","e":"lalita.verma@iilm.edu","p":"9582182255","c":"Opposite of 10 ground floor","i":"images/lalita.verma.webp"},{"n":"Gaurav Singhania","s":"Mr.","e":"gaurav.singhania@iilm.edu","p":"8802546234","c":"","i":"images/gaurav.singhania.webp"},{"n":"Varsha Srivastava","s":"Ms.","e":"varsha.srivastava@iilm.edu","p":"8960809578","c":"","i":"images/varsha.srivastava.webp"},{"n":"Rani Kumari","s":"Dr.","e":"rani.kumari@iilm.edu","p":"9999889546","c":"first floor right side of stairs","i":"images/rani.kumari.webp"},{"n":"Bhumika Pal","s":"Ms.","e":"bhumika.pal@iilm.edu","p":"9654539691","c":"eb faculty room","i":"images/bhumika.pal.png"},{"n":"Shweta Singh","s":"Ms.","e":"Shweta.singh@iilm.edu","p":"9560726176","c":"","i":"images/shweta.singh.webp"},{"n":"Vikas Kumar Tiwari","s":"Mr.","e":"vikas.tiwari@iilm.edu","p":"7869616789","c":"Law 203, Seat No. 22","i":"images/vikas.tiwari.webp"},{"n":"Vikas Singh","s":"Mr.","e":"vikas.singh@iilm.edu","p":"9716446585","c":"","i":"images/vikas.singh.webp"},{"n":"Shalini Singh","s":"Ms.","e":"shalini.singh@iilm.edu","p":"9560655563","c":"","i":"images/shalini.singh.png"},{"n":"Pankaj Sharma","s":"Mr.","e":"sharma.pankaj@iilm.edu","p":"9887745072","c":"","i":"images/sharma.pankaj.png"},{"n":"Kalpna Sagar","s":"Dr.","e":"kalpna.sagar@iilm.edu","p":"8851451039","c":"","i":"images/kalpna.sagar.png"},{"n":"Kamalkant Verma","s":"Dr.","e":"kamal.verma@iilm.edu","p":"9756401412","c":"PG 1st floor (1)","i":"images/kamal.verma.webp"},{"n":"Sumit Singh Dhanda","s":"Dr.","e":"sumit.dhanda@iilm.edu","p":"7988740031","c":"","i":""},{"n":"Lalit Mohan","s":"Mr.","e":"lalit.gupta@iilm.edu","p":"9997409268","c":"","i":"images/lalit.gupta.webp"},{"n":"Abhinav Raghav","s":"Mr.","e":"abhinav.raghav@iilm.edu","p":"9045307667","c":"Law block 203 faculty room","i":"images/abhinav.raghav.webp"},{"n":"Heena Khera","s":"Ms.","e":"heena.khera@iilm.edu","p":"8588892285","c":"","i":"images/heena.khera.webp"},{"n":"Mudita","s":"Dr.","e":"mudita@iilm.edu","p":"7508525034","c":"","i":"images/mudita.png"},{"n":"Gunjan Mittal Roy","s":"Dr.","e":"gunjan.mittal@iilm.edu","p":"9899423142","c":"","i":"images/gunjan.mittal.webp"},{"n":"Anand Kumar","s":"Mr.","e":"anand.kumar@iilm.edu","p":"8777318883","c":"","i":"images/anand.kumar.webp"},{"n":"Shivam Agarwal","s":"Mr.","e":"shivam.agarwa@iilm.edu","p":"","c":"","i":"images/shivam.agarwa.webp"},{"n":"Akshay Tiwari","s":"Mr.","e":"akshay.tiwari@iilm.edu","p":"8853487955","c":"","i":"images/akshay.tiwari.webp"},{"n":"Ajay Kumar","s":"Dr.","e":"ajaykumar@iilm.edu","p":"9557562400","c":"","i":"images/ajaykumar.png"},{"n":"Kanika Kansal","s":"Ms.","e":"kanika.kansal@iilm.edu","p":"9667987551","c":"","i":"images/kanika.kansal.webp"},{"n":"Pushpa Singh","s":"Ms.","e":"pushpa.singh@iilm.edu","p":"9711081316","c":"","i":"images/pushpa.singh.webp"},{"n":"Paramanand Kumar","s":"Mr.","e":"paramanand.kumar@iilm.edu","p":"8569825230","c":"","i":""},{"n":"Neeraj Pratap","s":"Dr.","e":"neeraj.pratap@iilm.edu","p":"9897335329","c":"","i":"images/neeraj.pratap.webp"},{"n":"Ishu Chaudhary","s":"Ms.","e":"Ishuchaudhary@iilm.edu","p":"8383854094","c":"","i":"images/ishuchaudhary.webp"},{"n":"Soniya Sharma","s":"Ms.","e":"soniya.sharma@iilm.edu","p":"7505963288","c":"","i":"images/soniya.sharma.webp"},{"n":"Ankita Agarwal","s":"Ms.","e":"ankita.agarwal@iilm.edu","p":"8875095242","c":"law block 203 desk no 54","i":"images/ankita.agarwal.webp"},{"n":"Udai Bhan Trivedi","s":"Dr.","e":"udai.trivedi@iilm.edu","p":"7355088314","c":"","i":"images/udai.trivedi.webp"},{"n":"Amit Kumar","s":"Dr.","e":"amit.kumar@iilm.edu","p":"7985747756","c":"","i":"images/amit.kumar.png"},{"n":"Tejasvee Bisen","s":"Dr.","e":"tejasvee.bisen@iilm.edu","p":"6394612735","c":"","i":"images/tejasvee.bisen.png"},{"n":"Ms. Pinki Singh","s":"Ms.","e":"pinki.singh@iilm.edu","p":"9958572889","c":"","i":"images/pinki.singh.png"},{"n":"Nayantara Kotoky","s":"Dr.","e":"nayantara.kotoky@iilm.edu","p":"9854239057","c":"","i":"images/nayantara.kotoky.webp"},{"n":"Pradeep Upadhayay","s":"Mr.","e":"Pradeep.upadhyay@iilm.edu","p":"7906212193","c":"","i":"images/pradeep.upadhyay.webp"},{"n":"Ritu Gothwal","s":"Dr.","e":"ritu.gothwal@iilm.edu","p":"8053957759","c":"","i":"images/ritu.gothwal.webp"},{"n":"Vijaya Choudhary","s":"Dr.","e":"vijaya.choudhary@iilm.edu","p":"8377898095","c":"SVH Cabin no 27","i":"images/vijaya.choudhary.webp"},{"n":"Monika Kumari","s":"Dr.","e":"monika.kumari@iilm.edu","p":"7006148254","c":"","i":"images/monika.kumari.png"},{"n":"Namit Chawla","s":"Mr.","e":"namit.chawla@iilm.edu","p":"8287796253","c":"","i":"images/namit.chawla.webp"},{"n":"Swati Vashisht","s":"Dr.","e":"swati.vashisht@iilm.edu","p":"9654532684","c":"","i":"images/swati.vashisht.webp"},{"n":"Aina Mehta","s":"Ms.","e":"aina.mehta@iilm.edu","p":"6280676790","c":"Seat 35, EB Faculty Room","i":""},{"n":"Shobhit Agrawal","s":"Mr.","e":"shobit.agrawal@iilm.edu","p":"7217265375","c":"","i":"images/shobit.agrawal.webp"},{"n":"Hilal Ahmed Shah","s":"Mr.","e":"hilal.shah@iilm.edu","p":"8491899109","c":"eb faculty room","i":"images/hilal.shah.webp"},{"n":"Niharika Chaudhary","s":"Ms.","e":"niharika.chaudhary@iilm.edu","p":"8218052133","c":"","i":"images/niharika.chaudhary.webp"},{"n":"Parul Saini","s":"Ms.","e":"parul.saini@iilm.edu","p":"9871596081","c":"EB-303 seat-82","i":"images/parul.saini.webp"},{"n":"Prakhar Consul","s":"Dr.","e":"prakhar.consul@iilm.edu","p":"7906875583","c":"","i":"images/prakhar.consul.webp"},{"n":"Sonal Shukla","s":"Dr.","e":"sonal.shukla@iilm.edu","p":"8947882576","c":"","i":"images/sonal.shukla.webp"},{"n":"T S Arthi","s":"Ms.","e":"ts.arthi@iilm.edu","p":"8526648137","c":"","i":"images/ts.arthi.png"},{"n":"Yamini Singh","s":"Ms.","e":"yamini.singh@iilm.edu","p":"8018171089","c":"","i":"images/yamini.singh.png"},{"n":"Mohd. Danish","s":"Dr.","e":"mohd.danish@iilm.edu","p":"7503702541","c":"EB 1st floor Cabin no 5","i":"images/mohd.danish.png"},{"n":"Vivek Krishna Misra","s":"Mr.","e":"vivek.krishna@iilm.edu","p":"8375016496","c":"","i":"images/vivek.krishna.jpg"},{"n":"Vijendra Singh","s":"Mr.","e":"vijendra.singh@iilm.edu","p":"9217766427","c":"","i":"images/vijendra.singh.png"},{"n":"Surinder Pal Singh","s":"Mr.","e":"surinder.singh@iilm.edu","p":"8218249798","c":"","i":"images/surinder.singh.png"},{"n":"Vivek Kumar Sharma","s":"Mr.","e":"sharma.vivek@iilm.edu","p":"9784960605","c":"","i":"images/sharma.vivek.png"},{"n":"Rohit Kumar","s":"Mr.","e":"r.kumar@iilm.edu","p":"8742862915","c":"","i":"images/r.kumar.webp"},{"n":"Kingshuk Shrivastava","s":"Dr.","e":"kingshuk.srivastava@iilm.edu","p":"9568533349","c":"","i":"images/kingshuk.srivastava.webp"},{"n":"Neha Jain","s":"Dr.","e":"nehajain@iilm.edu","p":"9910057715","c":"","i":"images/nehajain.webp"},{"n":"Vinay Mishra","s":"Mr.","e":"vinay.mishra@iilm.edu","p":"8318450103","c":"","i":"images/vinay.mishra.webp"},{"n":"Bhavana Shrivastava","s":"Ms.","e":"bhavana.shrivastava@iilm.edu","p":"7082095620","c":"EB Corridor beside stairs","i":"images/bhavana.shrivastava.webp"},{"n":"Poonam Yadav","s":"Ms.","e":"poonam.yadav@iilm.edu","p":"9971925991","c":"","i":"images/poonam.yadav.png"},{"n":"Abhist","s":"Mr.","e":"abhist.kumar@iilm.edu","p":"8126788064","c":"","i":""},{"n":"Jaswinder Singh","s":"Dr.","e":"jaswinder.singh@iilm.edu","p":"9711258411","c":"","i":"images/jaswinder.singh.webp"},{"n":"Reeta Mishra","s":"Ms.","e":"reeta.mishra@iilm.edu","p":"8368551322","c":"","i":"images/reeta.mishra.webp"},{"n":"Pinky Yadav","s":"Dr.","e":"Pinky.yadav@iilm.edu","p":"9650272703","c":"","i":"images/pinky.yadav.webp"},{"n":"Vishakha Agarwal","s":"Ms.","e":"vishakha.agarwal@iilm.edu","p":"8887691553","c":"","i":"images/vishakha.agarwal.webp"},{"n":"Surabhi Purwar","s":"Ms.","e":"surabhi.purwar@iilm.edu","p":"8318762903","c":"","i":"images/surabhi.purwar.webp"},{"n":"Aditya Bangia","s":"Mr.","e":"aditya.bangia@iilm.edu","p":"9528797704","c":"","i":"images/aditya.bangia.webp"},{"n":"Pardeep Kumar","s":"Dr.","e":"pardeep.kumar@iilm.edu","p":"7023680080","c":"","i":"images/pardeep.kumar.webp"},{"n":"Kirti Shukla","s":"Dr.","e":"kirti.shukla@iilm.edu","p":"9458702642","c":"","i":"images/kirti.shukla.png"},{"n":"Deepanshu Moyal","s":"Mr.","e":"deepanshu.moyal@iilm.edu","p":"8860679733","c":"","i":"images/deepanshu.moyal.webp"},{"n":"Sonam Sirohi","s":"Ms.","e":"sonam.sirohi@iilm.edu","p":"9315234717","c":"","i":"images/sonam.sirohi.webp"},{"n":"Apoorva Jain","s":"Ms.","e":"apoorva.jain@iilm.edu","p":"9829684912","c":"pg office ground floor","i":"images/apoorva.jain.webp"},{"n":"Jitendra","s":"Dr.","e":"mr.jitendra@iilm.edu","p":"9458864496","c":"","i":"images/mr.jitendra.png"},{"n":"Nazia Tabassum","s":"Dr.","e":"nazia.tabassum@iilm.edu","p":"9971649687","c":"","i":"images/nazia.tabassum.png"},{"n":"Greeshma GS","s":"Ms.","e":"greeshma.gs@iilm.edu","p":"9645455738","c":"","i":"images/greeshma.gs.png"},{"n":"Sahil Kansal","s":"Dr.","e":"sahil.kansal@iilm.edu","p":"9466924862","c":"Director block cabin 25","i":"images/sahil.kansal.webp"},{"n":"Jyoti Thakur","s":"Ms.","e":"Jyoti.thakur@iilm.edu","p":"7065015057","c":"","i":"images/jyoti.thakur.webp"},{"n":"Gajraj Singh","s":"Mr.","e":"gajraj.singh@iilm.edu","p":"9619291269","c":"","i":"images/gajraj.singh.webp"},{"n":"Mukesh Kumar","s":"Mr.","e":"mukesh.kumar@iilm.edu","p":"8816003115","c":"","i":"images/mukesh.kumar.webp"},{"n":"Pankaj Kapoor","s":"Dr.","e":"pkapoor@iilm.edu","p":"9729280731","c":"Director's block Cabin no 18","i":"images/pkapoor.webp"},{"n":"Pankaj Kumar","s":"Mr.","e":"pankaj.kumar@iilm.edu","p":"9582712120","c":"","i":"images/pankaj.kumar.webp"},{"n":"Simran Chugwani","s":"Ms.","e":"simran.chugwani@iilm.edu","p":"7354920033","c":"","i":"images/simran.chugwani.webp"},{"n":"Aanchal Vij","s":"Ms.","e":"aanchal.vij@iilm.edu","p":"8146325511","c":"Law 203- cubical 18","i":"images/aanchal.vij.webp"},{"n":"Rohit Kumar Kamboj","s":"Mr.","e":"kumar.rohit@iilm.edu","p":"9897783223","c":"","i":"images/kumar.rohit.webp"},{"n":"Nitin Bharati","s":"Mr.","e":"nitin.bharti@iilm.edu","p":"6394344270","c":"","i":"images/nitin.bharti.webp"},{"n":"Vikas Kumar","s":"Mr.","e":"vikas.k@iilm.edu","p":"8882738827","c":"","i":"images/vikas.k.png"},{"n":"Heena Phogat","s":"Ms.","e":"heena.phogat@iilm.edu","p":"9350499428","c":"","i":"images/heena.phogat.png"},{"n":"Ms. Shruti Kumari","s":"","e":"shruti.kumari@iilm.edu","p":"8178045196","c":"","i":""},{"n":"Ms. Teena Verma","s":"","e":"teena.verma@iilm.edu","p":"9871368546","c":"","i":""},{"n":"Mr. Shyam Kumar","s":"","e":"shyam.kumar@iilm.edu","p":"9555120344","c":"","i":"images/shyam.kumar.png"},{"n":"Ms. Madhuri Mishra","s":"","e":"madhuri.mishra@iilm.edu","p":"9580371449","c":"","i":"images/madhuri.mishra.png"},{"n":"Mr. Vaibhav Chauhan","s":"","e":"vaibhav.chauhan@iilm.edu","p":"6395760603","c":"","i":"images/vaibhav.chauhan.png"},{"n":"Ms. Jyoti Kataria","s":"","e":"jyoti.kataria@iilm.edu","p":"7082948105   7206672844","c":"","i":"images/jyoti.kataria.png"},{"n":"Mr. Prem Prakash","s":"","e":"prem.prakash@iilm.edu","p":"9971679652","c":"","i":"images/prem.prakash.png"},{"n":"Mr. Akash Bhasney","s":"","e":"akash.bhasney@iilm.edu","p":"7424249222","c":"","i":"images/akash.bhasney.png"},{"n":"Ms. Rekha Baghel","s":"","e":"rekha.baghel@iilm.edu","p":"9953063693","c":"","i":"images/rekha.baghel.png"},{"n":"Mr. Amit Katoch","s":"","e":"amit.katoch@iilm.edu","p":"8527900370","c":"","i":"images/amit.katoch.png"},{"n":"Ms. Madhavi Saxena","s":"","e":"madhavi@iilm.edu","p":"9217826649","c":"","i":""},{"n":"Ms. Neelam Kumari","s":"","e":"neelam.kumari@iilm.edu","p":"8860357777","c":"","i":"images/neelam.kumari.png"},{"n":"Mr. Yash Garg","s":"","e":"yash.garg@iilm.edu","p":"7669546828","c":"","i":"images/yash.garg.png"},{"n":"Mr. Aman Shrivastava","s":"","e":"aman.shrivastav@iilm.edu","p":"6200733384","c":"","i":"images/aman.shrivastav.jpg"},{"n":"Mr. Gaurav Nagarkoti","s":"","e":"gaurav.nagarkoti@iilm.edu","p":"9910019270","c":"","i":"images/gaurav.nagarkoti.jpeg"},{"n":"Dr. Mohit Chowdhary","s":"","e":"chowdhary.mohit@iilm.edu","p":"9416294402","c":"","i":"images/chowdhary.mohit.png"},{"n":"Ms. Divya Singhal","s":"","e":"divya.singhal@iilm.edu","p":"8447586779","c":"","i":"images/divya.singhal.png"},{"n":"Dr. Ashok Kumar","s":"","e":"kumar.ashok@iilm.edu","p":"9868473630","c":"","i":"images/kumar.ashok.png"},{"n":"Mr. Aniruddh Kumar","s":"","e":"aniruddh.kumar@iilm.edu","p":"9651561804","c":"","i":"images/aniruddh.kumar.png"},{"n":"Mr. Ravindra Singh Koranga","s":"","e":"ravindra.koranga@iilm.edu","p":"7477764777","c":"","i":"images/ravindra.koranga.png"},{"n":"Dr. Amita Sharma","s":"","e":"amita.sharma@iilm.edu","p":"9927034562","c":"","i":""},{"n":"Dr. SG Lakshmi Narayanan","s":"","e":"lakshmi.narayanan@iilm.edu","p":"9626520500","c":"","i":"images/lakshmi.narayanan.png"},{"n":"Mr. Shokendra Dev Verma","s":"","e":"shokendra.verma@iilm.edu","p":"9220624153","c":"","i":"images/shokendra.verma.png"},{"n":"Mr. Murari Singh","s":"","e":"murari.singh@iilm.edu","p":"9910959350","c":"","i":"images/murari.singh.png"},{"n":"Dr. Akhilesh Kumar7","s":"","e":"akhilesh.kumar@iilm.edu","p":"9936481890","c":"","i":"images/akhilesh.kumar.png"},{"n":"Mr. Tarachand Verma","s":"","e":"tarachand.verma@iilm.edu","p":"7838275722","c":"","i":""},{"n":"Dr. Chouhan Kumar Rath","s":"","e":"chouhan.rath@iilm.edu","p":"9040662929","c":"","i":"images/chouhan.rath.png"},{"n":"Ms. Astha Tripathi","s":"","e":"astha.tripathi@iilm.edu","p":"9451260679, 9140008213","c":"","i":"images/astha.tripathi.png"},{"n":"Ms. Akanksha Rastogi","s":"","e":"akanksha.rastogi@iilm.edu","p":"6283944837","c":"","i":"images/akanksha.rastogi.png"},{"n":"Mr. Hari Saroop","s":"","e":"hari.saroop@iilm.edu","p":"8528137301","c":"","i":"images/hari.saroop.png"},{"n":"Mr. Shubham Jayasval","s":"","e":"shubham.jayasval@iilm.edu","p":"9519690801, 7905240788","c":"","i":""},{"n":"Ms. Madhavi Tripathi","s":"","e":"madhavi.tripathi@iilm.edu","p":"8527354586","c":"","i":"images/madhavi.tripathi.png"},{"n":"Mr. Aditya Kumar Gupta","s":"","e":"aditya.gupta@iilm.edu","p":"8540938944","c":"","i":"images/aditya.gupta.png"},{"n":"Mr. Nishant Upadhyay","s":"","e":"nishant.upadhyay@iilm.edu","p":"7303031620","c":"","i":"images/nishant.upadhyay.jpeg"},{"n":"Mr. Naveen","s":"","e":"naveen@iilm.edu","p":"9212747666","c":"","i":"images/naveen.png"},{"n":"Mr. Mudit Bhardwaj","s":"","e":"mudit.bhardwaj@iilm.edu","p":"9760270083","c":"","i":"images/mudit.bhardwaj.png"},{"n":"Ms. Madhu Lata Nirmal","s":"","e":"madhu.nirmal@iilm.edu","p":"8130294928","c":"","i":"images/madhu.nirmal.png"}]</script>
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById('facultyData').textContent);
+
+  var ICON_MAIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>';
+  var ICON_PHONE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.36 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+  var ICON_PIN = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+  var ICON_PIN_OFF = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.75 7.09a3 3 0 0 1 2.16 2.16M14.9 14.9A3 3 0 0 1 10 10"/><path d="M17.61 17.61A8 8 0 0 1 12 22s-8-6-8-12c0-1.83.62-3.5 1.66-4.85M8.35 2.68A8 8 0 0 1 20 10c0 2.34-1.36 4.7-2.91 6.71"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+  var ICON_FLAG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
+
+  var palette = ['#2C4A38','#3B5A46','#4A6B54','#5C4A2C','#6B5B3B','#3E5C6B'];
+  function colorFor(name){
+    var h = 0;
+    for (var i=0;i<name.length;i++){ h = (h*31 + name.charCodeAt(i)) >>> 0; }
+    return palette[h % palette.length];
+  }
+  function initials(name){
+    var parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '?';
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function firstPhone(phone){
+    var m = String(phone).match(/\d{10}/);
+    return m ? m[0] : String(phone).replace(/\D/g,'');
+  }
+  function telHref(phone){
+    var digits = firstPhone(phone);
+    if (digits.length === 10) digits = '91' + digits;
+    return 'tel:+' + digits;
+  }
+  var REPORT_TO = 'modassir.25scs1003003175@iilm.edu';
+
+  // Phones/tablets: use mailto: so the native mail app opens.
+  // Laptops/desktops: keep the Gmail web compose window that already works.
+  var IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints > 1 && window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+
+  function mailLink(subject, body){
+    if (IS_MOBILE){
+      return {
+        href: 'mailto:' + REPORT_TO + '?subject=' + encodeURIComponent(subject) +
+              (body ? '&body=' + encodeURIComponent(body.replace(/\n/g, '\r\n')) : ''),
+        attrs: ''
+      };
+    }
+    return {
+      href: 'https://mail.google.com/mail/?view=cm&fs=1&to=' + REPORT_TO +
+            '&su=' + encodeURIComponent(subject) + (body ? '&body=' + encodeURIComponent(body) : ''),
+      attrs: ' target="_blank" rel="noopener"'
+    };
+  }
+  function reportLink(name){
+    var subject = 'Faculty Cabin Location Update \u2014 ' + name;
+    var body = 'Hi,\n\nI wanted to let you know that ' + name + ' currently sits here:\n\nCabin / room: [enter location]\nBuilding / floor: [enter details]\n\nThanks!';
+    return mailLink(subject, body);
+  }
+
+  (function setFooterLink(){
+    var el = document.getElementById('reportIssue');
+    if (!el) return;
+    var l = mailLink('Faculty Directory \u2014 feedback', '');
+    el.setAttribute('href', l.href);
+    if (l.attrs) el.setAttribute('target', '_blank');
+  })();
+
+  // Images are downloaded locally by download_images.py into ./images/, so
+  // the site references them directly — no live hotlinking, no proxy.
+  function cardHTML(f){
+    var name = escapeHtml((f.s ? f.s + ' ' : '') + f.n);
+    var bg = colorFor(f.n);
+    var fallbackDiv = ('<div class=&quot;photo-fallback&quot; style=&quot;background:'+bg+'&quot;>'+initials(f.n)+'</div>').replace(/'/g,"\\'");
+    var photo = f.i
+      ? '<img class="photo" src="'+escapeHtml(f.i)+'" alt="'+name+'" loading="lazy" onerror="this.outerHTML=\''+fallbackDiv+'\'">'
+      : '<div class="photo-fallback" style="background:'+bg+'">'+initials(f.n)+'</div>';
+
+    var emailRow = f.e
+      ? '<div class="row">'+ICON_MAIL+'<a href="mailto:'+escapeHtml(f.e)+'" title="'+escapeHtml(f.e)+'">'+escapeHtml(f.e)+'</a></div>'
+      : '';
+    var phoneRow = f.p
+      ? '<div class="row">'+ICON_PHONE+'<a href="'+telHref(f.p)+'">'+escapeHtml(f.p.replace(/\n/g,' / '))+'</a></div>'
+      : '';
+
+    var locationBlock;
+    if (f.c){
+      locationBlock = '<div class="location found">'+ICON_PIN+'<div class="loc-text"><span class="loc-label">Cabin location</span><span class="loc-value">'+escapeHtml(f.c)+'</span></div></div>';
+    } else {
+      var rl = reportLink((f.s?f.s+' ':'')+f.n);
+      locationBlock = '<div class="location missing">'+
+        '<div class="missing-text">'+ICON_PIN_OFF+'<span>No location data available</span></div>'+
+        '<a class="report-btn" href="'+escapeHtml(rl.href)+'"'+rl.attrs+'>'+ICON_FLAG+'I know this cabin</a>'+
+        '</div>';
+    }
+
+    return '<article class="card" data-name="'+escapeHtml(f.n.toLowerCase())+'" data-located="'+(f.c?'1':'0')+'">'+
+      '<div class="card-head">'+
+        '<div class="photo-wrap">'+photo+'</div>'+
+        '<div class="photo-name">'+(f.s?'<span class="sal">'+escapeHtml(f.s.toUpperCase())+'</span>':'')+'<h3>'+escapeHtml(f.n)+'</h3></div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        locationBlock +
+        emailRow + phoneRow +
+      '</div>'+
+    '</article>';
+  }
+
+  var grid = document.getElementById('grid');
+  var allHTML = DATA.map(cardHTML);
+  var frag = document.createElement('div');
+  grid.innerHTML = allHTML.join('');
+
+  var searchInput = document.getElementById('searchInput');
+  var chips = document.querySelectorAll('.chip');
+  var resultLabel = document.getElementById('resultLabel');
+  var resultCount = document.getElementById('resultCount');
+  var emptyState = document.getElementById('emptyState');
+  var activeFilter = 'all';
+
+  function applyFilters(){
+    var q = searchInput.value.trim().toLowerCase();
+    var cards = grid.querySelectorAll('.card');
+    var visible = 0;
+    cards.forEach(function(card){
+      var matchesText = !q || card.getAttribute('data-name').indexOf(q) !== -1;
+      var matchesFilter = activeFilter === 'all' || (activeFilter === 'located' && card.getAttribute('data-located') === '1');
+      var show = matchesText && matchesFilter;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    resultCount.textContent = visible + ' of ' + DATA.length;
+    resultLabel.textContent = q ? 'Results for "' + searchInput.value.trim() + '"' : (activeFilter === 'located' ? 'Faculty with a known cabin' : 'Showing all faculty');
+    emptyState.style.display = visible === 0 ? 'block' : 'none';
+    grid.style.display = visible === 0 ? 'none' : 'grid';
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  chips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      chips.forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      activeFilter = chip.getAttribute('data-filter');
+      applyFilters();
+    });
+  });
+
+  applyFilters();
+})();
+</script>
+</body>
+</html>
